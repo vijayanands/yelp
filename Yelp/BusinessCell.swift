@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AFNetworking
 
 class BusinessCell: UITableViewCell {
     @IBOutlet weak var nameLabel: UILabel!
@@ -19,7 +20,25 @@ class BusinessCell: UITableViewCell {
 
     var business: Business! {
         didSet {
-            nameLabel.text = business.name
+            nameLabel.text = business.name // assuming that the business name will always be present
+            if let imageURL = business.imageURL {
+                thumbImageView.setImageWith(imageURL)
+            }
+            if let ratingsImageURL = business.ratingImageURL {
+                ratingsImageView.setImageWith(ratingsImageURL)
+            }
+            if let distance = business.distance {
+                distanceLabel.text = distance
+            }
+            if let catogories = business.categories {
+                catogoriesLabel.text = catogories
+            }
+            if let reviews = business.reviewCount {
+                reviewsCountLabel.text = "\(reviews) Reviews"
+            }
+            if let address = business.address {
+                addressLabel.text = address
+            }
         }
     }
     

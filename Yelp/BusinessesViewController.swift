@@ -11,26 +11,43 @@ import UIKit
 class BusinessesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     var businesses: [Business]!
-    
     @IBOutlet weak var resultsTableView: UITableView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         resultsTableView.delegate = self
         resultsTableView.dataSource = self
+        resultsTableView.estimatedRowHeight = 130
+        resultsTableView.rowHeight = UITableViewAutomaticDimension
+        
+        //create a new button
+        let button: UIButton = UIButton(type: UIButtonType.custom)
+        //set image for button
+        button.setImage(UIImage(named: "filter.png"), for: .normal)
+        //add function for button
+        // TODO
+        //set frame
+        button.frame = CGRect(x: 0, y: 0, width: 60, height: 35)
+        button.backgroundColor = UIColor.white
+        button.layer.cornerRadius = 5
+        button.layer.borderWidth = 1
+        
+        let barButton = UIBarButtonItem(customView: button)
+        //assign button to navigationbar
+        self.navigationItem.leftBarButtonItem = barButton
         
         Business.searchWithTerm(term: "Thai", completion: { (businesses: [Business]?, error: Error?) -> Void in
             
-            self.businesses = businesses
-            self.resultsTableView.reloadData()
+                self.businesses = businesses
+                self.resultsTableView.reloadData()
             
-            if let businesses = businesses {
-                for business in businesses {
-                    print(business.name!)
-                    print(business.address!)
-                }
-            }
-            
+				if let businesses = businesses {
+					for business in businesses {
+						print(business.name!)
+						print(business.address!)
+					}
+				}
             }
         )
         
@@ -45,6 +62,12 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
          }
          */
         
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        let nav = self.navigationController?.navigationBar
+        nav?.barStyle = UIBarStyle.black
+        nav?.tintColor = UIColor.yellow
     }
     
     override func didReceiveMemoryWarning() {
