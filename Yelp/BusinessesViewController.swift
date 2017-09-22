@@ -28,7 +28,7 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
         //add function for button
         // TODO
         //set frame
-        button.frame = CGRect(x: 0, y: 0, width: 60, height: 35)
+        button.frame = CGRect(x: 0, y: 0, width: 60, height: 30)
         button.backgroundColor = UIColor.white
         button.layer.cornerRadius = 5
         button.layer.borderWidth = 1
@@ -36,7 +36,16 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
         let barButton = UIBarButtonItem(customView: button)
         //assign button to navigationbar
         self.navigationItem.leftBarButtonItem = barButton
-        
+		
+		let searchBar = UISearchBar()
+		searchBar.sizeToFit()
+		
+		// the UIViewController comes with a navigationItem property
+		// this will automatically be initialized for you if when the
+		// view controller is added to a navigation controller's stack
+		// you just need to set the titleView to be the search bar
+		self.navigationItem.titleView = searchBar
+		
         Business.searchWithTerm(term: "Thai", completion: { (businesses: [Business]?, error: Error?) -> Void in
             
                 self.businesses = businesses
