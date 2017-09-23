@@ -8,7 +8,12 @@
 
 import UIKit
 
-class FilterViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, FilterCellDelegate {
+@objc protocol FiltersViewControllerDelegate {
+	@objc optional func filtersViewController(filtersViewController: FiltersViewController,
+	                                         didUpdateFilters filters: [String:AnyObject])
+}
+
+class FiltersViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, FilterCellDelegate {
 	
 	@IBOutlet weak var filtersTableView: UITableView!
 	let filtersTableSectionsHeaders = ["Deals", "Distance", "Sort By", "Categories"]

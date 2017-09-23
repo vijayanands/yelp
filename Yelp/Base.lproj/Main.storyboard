@@ -138,7 +138,7 @@
         <!--Filters-->
         <scene sceneID="EZa-eH-K5y">
             <objects>
-                <viewController id="ZHu-Xy-KaC" customClass="FilterViewController" customModule="Yelp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="ZHu-Xy-KaC" customClass="FiltersViewController" customModule="Yelp" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="5NU-LX-WGM"/>
                         <viewControllerLayoutGuide type="bottom" id="meJ-Hc-XGU"/>
