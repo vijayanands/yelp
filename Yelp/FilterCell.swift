@@ -16,7 +16,7 @@ class FilterCell: UITableViewCell {
 	@IBOutlet weak var itemLabel: UILabel!
 	@IBOutlet weak var itemSwitch: UISwitch!
 	
-	var delegate: FilterCellDelegate!
+	weak var delegate: FilterCellDelegate?
 
     override func awakeFromNib() {
         super.awakeFromNib()

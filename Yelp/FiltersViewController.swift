@@ -1,8 +1,8 @@
 //
-//  FilterViewController.swift
+//  FiltersViewController.swift
 //  Yelp
 //
-//  Created by Vijayanand on 9/22/17.
+//  Created by Vijayanand on 9/23/17.
 //  Copyright © 2017 Timothy Lee. All rights reserved.
 //
 
@@ -10,7 +10,7 @@ import UIKit
 
 @objc protocol FiltersViewControllerDelegate {
 	@objc optional func filtersViewController(filtersViewController: FiltersViewController,
-	                                         didUpdateFilters filters: [String:AnyObject])
+	                                          didUpdateFilters filters: [String:AnyObject])
 }
 
 class FiltersViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, FilterCellDelegate {
@@ -22,31 +22,36 @@ class FiltersViewController: UIViewController, UITableViewDataSource, UITableVie
 	let distances: [String] = ["Auto", "0.3 miles", "1 mile", "5 miles", "25 miles"]
 	var categories: [[String:String]]!
 	var switchStates: [Int:Bool] = [Int:Bool]()
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
+	
+	weak var delegate: FiltersViewControllerDelegate?
+	
+	override func viewDidLoad() {
+		super.viewDidLoad()
 		filtersTableView.delegate = self
 		filtersTableView.dataSource = self
 		
 		filtersTableView.estimatedRowHeight = 130
 		filtersTableView.rowHeight = UITableViewAutomaticDimension
-				
-        // Do any additional setup after loading the view.
+		
+		// Do any additional setup after loading the view.
 		categories = yelpCategories()
 		rowsInSection = [1, distances.count, sortBy.count, categories.count]
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
+	}
+	
+	override func didReceiveMemoryWarning() {
+		super.didReceiveMemoryWarning()
+		// Dispose of any resources that can be recreated.
+	}
+	
 	@IBAction func onCancelButton(_ sender: Any) {
 		dismiss(animated: true, completion: nil)
 	}
-
+	
 	@IBAction func onSearchButton(_ sender: Any) {
 		dismiss(animated: true, completion: nil)
+		let filters = [String: AnyObject]()
+		
+		delegate?.filtersViewController?(filtersViewController: self, didUpdateFilters: filters)
 	}
 	
 	func numberOfSections(in tableView: UITableView) -> Int {
@@ -270,13 +275,13 @@ class FiltersViewController: UIViewController, UITableViewDataSource, UITableVie
 		        ["name" : "Yugoslav", "code": "yugoslav"]]
 	}
 	/*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+	// MARK: - Navigation
+	
+	// In a storyboard-based application, you will often want to do a little preparation before navigation
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+	// Get the new view controller using segue.destinationViewController.
+	// Pass the selected object to the new view controller.
+	}
+	*/
+	
 }
