@@ -12,7 +12,8 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
     
     var businesses: [Business]!
     @IBOutlet weak var resultsTableView: UITableView!
-    
+	@IBOutlet weak var filtersButton: UIBarButtonItem!
+	
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -20,22 +21,6 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
         resultsTableView.dataSource = self
         resultsTableView.estimatedRowHeight = 130
         resultsTableView.rowHeight = UITableViewAutomaticDimension
-        
-        //create a new button
-        let button: UIButton = UIButton(type: UIButtonType.custom)
-        //set image for button
-        button.setImage(UIImage(named: "filter.png"), for: .normal)
-        //add function for button
-        // TODO
-        //set frame
-        button.frame = CGRect(x: 0, y: 0, width: 60, height: 30)
-        button.backgroundColor = UIColor.white
-        button.layer.cornerRadius = 5
-        button.layer.borderWidth = 1
-        
-        let barButton = UIBarButtonItem(customView: button)
-        //assign button to navigationbar
-        self.navigationItem.leftBarButtonItem = barButton
 		
 		let searchBar = UISearchBar()
 		searchBar.sizeToFit()
@@ -99,7 +84,21 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
         
         return cell
     }
-    
+	
+	func addCustomLeftButton(){
+		let viewLeftButton = UIView(frame: CGRect(x: 0, y: 0, width: 60, height: 30))
+		viewLeftButton.backgroundColor = UIColor.yellow
+		let button = UIButton(frame: CGRect(x: 0, y: 0, width: 60, height: 30))
+		button.setImage(UIImage(named: "filter.png"), for: .normal)
+		button.backgroundColor = UIColor.white
+		button.layer.cornerRadius = 5
+		button.layer.borderWidth = 1
+		viewLeftButton.addSubview(button)
+		
+		self.filtersButton.customView = viewLeftButton
+		self.navigationItem.leftBarButtonItem = self.filtersButton
+	}
+	
     /*
      // MARK: - Navigation
      
