@@ -8,7 +8,7 @@
 
 import UIKit
 
-class FilterViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class FilterViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, FilterCellDelegate {
 	
 	@IBOutlet weak var filtersTableView: UITableView!
 	let filtersTableSectionsHeaders = ["Deals", "Distance", "Sort By", "Categories"]
@@ -16,6 +16,7 @@ class FilterViewController: UIViewController, UITableViewDataSource, UITableView
 	let sortBy: [String] = ["best match","distance", "highest rated"]
 	let distances: [String] = ["Auto", "0.3 miles", "1 mile", "5 miles", "25 miles"]
 	var categories: [[String:String]]!
+	var switchStates: [Int:Bool] = [Int:Bool]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -81,7 +82,15 @@ class FilterViewController: UIViewController, UITableViewDataSource, UITableView
 		default:
 			print("invalid section")
 		}
+		cell.delegate = self
+		cell.itemSwitch.isOn = switchStates[indexPath.row] ?? false
+		
 		return cell
+	}
+	
+	func filterCell(filterCell: FilterCell, didChangeValue value: Bool) {
+		let indexPath = filtersTableView.indexPath(for: filterCell)!
+		switchStates[(indexPath.row)] = value
 	}
 	
 	func yelpCategories() -> [[String:String]] {
