@@ -90,13 +90,7 @@ class FiltersViewController: UIViewController, UITableViewDataSource, UITableVie
 	func numberOfSections(in tableView: UITableView) -> Int {
 		return filtersTableSectionsHeaders.count
 	}
-	
-	func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-		let headerFooterView = view as! UITableViewHeaderFooterView
-		headerFooterView.backgroundView?.backgroundColor = UIColor.gray
-		headerFooterView.textLabel?.textColor = UIColor.black
-	}
-	
+		
 	func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
 		return filtersTableSectionsHeaders[section]
 	}
