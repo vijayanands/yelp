@@ -20,6 +20,7 @@ class FiltersViewController: UIViewController, UITableViewDataSource, UITableVie
 	var rowsInSection: [Int]!
 	let sortBy: [String] = ["best match","distance", "highest rated"]
 	let distances: [String] = ["Auto", "0.3 miles", "1 mile", "5 miles", "25 miles"]
+	let distanceInMeters: [Int] = [483, 1609, 8047, 32187]
 	var categories: [[String:String]]!
 	var switchStates: [Int:Bool] = [Int:Bool]()
 	
@@ -49,7 +50,39 @@ class FiltersViewController: UIViewController, UITableViewDataSource, UITableVie
 	
 	@IBAction func onSearchButton(_ sender: Any) {
 		dismiss(animated: true, completion: nil)
-		let filters = [String: AnyObject]()
+		var filters = [String: AnyObject]()
+		
+		let distanceMinIndex = rowsInSection[0]
+		let sortByMinIndex = distanceMinIndex + rowsInSection[1]
+		let categoriesMinIndex = sortByMinIndex + rowsInSection[2]
+		
+		var selectedCategories = [String]()
+
+		for (row, isSelected) in switchStates {
+			print("Row \(row) selected")
+			switch row {
+			case 0..<distanceMinIndex:
+				if isSelected {
+					filters["deal"] = true as AnyObject
+				}
+			case distanceMinIndex..<sortByMinIndex:
+				if isSelected && ((row - distanceMinIndex) > 0) {
+					filters["distance"] = distanceInMeters[row - distanceMinIndex-1] as AnyObject
+				}
+			case sortByMinIndex..<categoriesMinIndex:
+				if isSelected {
+					filters["sortBy"] = row - sortByMinIndex as AnyObject
+				}
+			default:
+				if isSelected {
+					selectedCategories.append(categories[row-categoriesMinIndex]["code"]!)
+				}
+			}
+			
+		}
+		if selectedCategories.count > 0 {
+			filters["categories"] = selectedCategories as AnyObject
+		}
 		
 		delegate?.filtersViewController?(filtersViewController: self, didUpdateFilters: filters)
 	}
@@ -93,14 +126,26 @@ class FiltersViewController: UIViewController, UITableViewDataSource, UITableVie
 			print("invalid section")
 		}
 		cell.delegate = self
-		cell.itemSwitch.isOn = switchStates[indexPath.row] ?? false
+		print("Section \(indexPath.section), Row \(indexPath.row)")
 		
+		cell.itemSwitch.isOn = switchStates[findRowIndex(forSection: indexPath.section, forRow: indexPath.row)] ?? false
 		return cell
 	}
 	
 	func filterCell(filterCell: FilterCell, didChangeValue value: Bool) {
 		let indexPath = filtersTableView.indexPath(for: filterCell)!
-		switchStates[(indexPath.row)] = value
+		print("section \(indexPath.section), row \(indexPath.row)")
+		switchStates[findRowIndex(forSection: indexPath.section, forRow: indexPath.row)] = value
+	}
+	
+	
+	func findRowIndex(forSection section: Int, forRow row: Int) -> Int {
+		var rowIndex = 0
+		for i in 0..<section {
+			rowIndex = rowIndex + rowsInSection[i]
+		}
+		rowIndex = rowIndex + row
+		return rowIndex
 	}
 	
 	func yelpCategories() -> [[String:String]] {

@@ -8,11 +8,13 @@
 
 import UIKit
 
-class BusinessesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, FiltersViewControllerDelegate {
+class BusinessesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, FiltersViewControllerDelegate, UISearchBarDelegate {
     
     var businesses: [Business]!
     @IBOutlet weak var resultsTableView: UITableView!
 	@IBOutlet weak var filtersButton: UIBarButtonItem!
+	var searchActive: Bool = false
+	var searchTerm = "Restaurants"
 	
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,6 +26,7 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
 		
 		let searchBar = UISearchBar()
 		searchBar.sizeToFit()
+		searchBar.delegate = self
 		
 		// the UIViewController comes with a navigationItem property
 		// this will automatically be initialized for you if when the
@@ -44,18 +47,6 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
 				}
             }
         )
-        
-        /* Example of Yelp search with more search options specified
-         Business.searchWithTerm("Restaurants", sort: .Distance, categories: ["asianfusion", "burgers"], deals: true) { (businesses: [Business]!, error: NSError!) -> Void in
-         self.businesses = businesses
-         
-         for business in businesses {
-         print(business.name!)
-         print(business.address!)
-         }
-         }
-         */
-        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -99,20 +90,57 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
 		self.navigationItem.leftBarButtonItem = self.filtersButton
 	}
 	
-     // MARK: - Navigation
-     
-     // In a storyboard-based application, you will often want to do a little preparation before navigation
+	func filtersViewController(filtersViewController: FiltersViewController, didUpdateFilters filters: [String : AnyObject]) {
+		let categories = filters["categories"] as? [String] ?? nil
+		let sort = filters["sortBy"] as? Int ?? nil
+		let deals = filters["deals"] as? Bool ?? nil
+		let radius_filter = filters["radius_filter"] as? Int ?? nil
+		var yelpSortMode:YelpSortMode? = nil
+		
+		if sort != nil {
+			yelpSortMode = YelpSortMode(rawValue: sort!)
+		}
+		
+		Business.searchWithTerm(term: searchTerm, sort: yelpSortMode, categories: categories, deals: deals, radius_filter: radius_filter) { (businesses: [Business]?, error: Error?) in
+			self.businesses = businesses
+			self.resultsTableView.reloadData()
+		}
+	}
 	
-     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-     // Get the new view controller using segue.destinationViewController.
+	func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+		searchActive = true;
+	}
+	
+	func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+		searchActive = false;
+	}
+	
+	func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+		searchActive = false;
+	}
+	
+	func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+		searchActive = false;
+	}
+	
+	func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+		Business.searchWithTerm(term: searchText, sort: nil, categories: nil, deals: nil, radius_filter: nil) { (businesses: [Business]?, error: Error?) in
+			self.businesses = businesses
+			self.resultsTableView.reloadData()
+		}
+		searchTerm = searchText
+		searchActive = false;
+	}
+
+	// MARK: - Navigation
+	
+	// In a storyboard-based application, you will often want to do a little preparation before navigation
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+		// Get the new view controller using segue.destinationViewController.
 		let navigationController = segue.destination as! UINavigationController
 		let filtersViewController = navigationController.topViewController as! FiltersViewController
-     // Pass the selected object to the new view controller.
+		// Pass the selected object to the new view controller.
 		filtersViewController.delegate = self
-     }
-	
-	func filtersViewController(filtersViewController: FiltersViewController, didUpdateFilters filters: [String : AnyObject]) {
-		code
 	}
 	
 }
