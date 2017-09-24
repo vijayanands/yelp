@@ -8,6 +8,7 @@ target 'Yelp' do
   # Pods for Yelp
   pod 'AFNetworking'
   pod 'BDBOAuth1Manager'
+  pod 'PWSwitch'
 
   target 'YelpTests' do
     inherit! :search_paths

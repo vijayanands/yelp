@@ -106,23 +106,23 @@ class FiltersViewController: UIViewController, UITableViewDataSource, UITableVie
 		switch sectionId {
 		case 0:
 			cell.itemLabel.text = "Offering a Deal"
-			cell.itemSwitch.isOn = false
+			cell.pwSwitch.on = false
 		case 1:
 			cell.itemLabel.text = distances[indexPath.row]
-			cell.itemSwitch.isOn = false
+			cell.pwSwitch.on = false
 		case 2:
 			cell.itemLabel.text = sortBy[indexPath.row]
-			cell.itemSwitch.isOn = false
+			cell.pwSwitch.on = false
 		case 3:
 			cell.itemLabel.text = categories[indexPath.row]["name"]
-			cell.itemSwitch.isOn = false
+			cell.pwSwitch.on = false
 		default:
 			print("invalid section")
 		}
 		cell.delegate = self
 		print("Section \(indexPath.section), Row \(indexPath.row)")
 		
-		cell.itemSwitch.isOn = switchStates[findRowIndex(forSection: indexPath.section, forRow: indexPath.row)] ?? false
+		cell.pwSwitch.on = switchStates[findRowIndex(forSection: indexPath.section, forRow: indexPath.row)] ?? false
 		return cell
 	}
 	

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import PWSwitch
 
 @objc protocol FilterCellDelegate {
 	@objc optional func filterCell(filterCell: FilterCell, didChangeValue value: Bool)
@@ -14,15 +15,16 @@ import UIKit
 
 class FilterCell: UITableViewCell {
 	@IBOutlet weak var itemLabel: UILabel!
-	@IBOutlet weak var itemSwitch: UISwitch!
-	
+	@IBOutlet weak var switchView: UIView!
+
+	var pwSwitch = PWSwitch(frame: CGRect(x: 0, y: 0, width: 50, height: 26))
 	weak var delegate: FilterCellDelegate?
 
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
-		
-		itemSwitch.addTarget(self, action: #selector(FilterCell.switchValueChanged), for: UIControlEvents.valueChanged)
+		switchView.addSubview(pwSwitch)
+		pwSwitch.addTarget(self, action: #selector(FilterCell.switchValueChanged), for: UIControlEvents.valueChanged)
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -32,7 +34,7 @@ class FilterCell: UITableViewCell {
     }
 	
 	func switchValueChanged() {
-		delegate?.filterCell?(filterCell: self, didChangeValue: itemSwitch.isOn)
+		delegate?.filterCell?(filterCell: self, didChangeValue: pwSwitch.on)
 	}
 
 }
