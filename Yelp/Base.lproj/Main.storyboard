@@ -170,13 +170,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="kaB-A3-ev4">
-                                <rect key="frame" x="0.0" y="-20" width="375" height="667"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="kaB-A3-ev4">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="FilterCell" id="frX-1N-JWx" customClass="FilterCell" customModule="Yelp" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="56" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="55.5" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="frX-1N-JWx" id="a3f-Wo-dd0">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
@@ -197,6 +196,7 @@
                                                     </constraints>
                                                 </view>
                                             </subviews>
+                                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <constraints>
                                                 <constraint firstItem="Y1N-zx-7Sx" firstAttribute="leading" secondItem="a3f-Wo-dd0" secondAttribute="leadingMargin" constant="10" id="6iq-QN-Pxy"/>
                                                 <constraint firstItem="b1D-g9-14t" firstAttribute="centerY" secondItem="Y1N-zx-7Sx" secondAttribute="centerY" id="bBQ-nY-tuh"/>
@@ -213,6 +213,12 @@
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="kaB-A3-ev4" firstAttribute="leading" secondItem="qON-aV-lvh" secondAttribute="leading" id="BdP-Ds-qyy"/>
+                            <constraint firstItem="meJ-Hc-XGU" firstAttribute="top" secondItem="kaB-A3-ev4" secondAttribute="bottom" id="Gnd-XZ-r3C"/>
+                            <constraint firstAttribute="trailing" secondItem="kaB-A3-ev4" secondAttribute="trailing" id="Hqj-sh-Y8y"/>
+                            <constraint firstItem="kaB-A3-ev4" firstAttribute="top" secondItem="qON-aV-lvh" secondAttribute="top" id="Z9a-qr-n7X"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Filters" id="3ai-kJ-26H">
                         <barButtonItem key="leftBarButtonItem" title="Cancel" id="DlL-RR-LVJ">

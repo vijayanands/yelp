@@ -13,7 +13,7 @@ import UIKit
 	                                          didUpdateFilters filters: [String:AnyObject])
 }
 
-class FiltersViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, FilterCellDelegate {
+class FiltersViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, FilterCellDelegate, ExpandableHeaderViewDelegate {
 	
 	@IBOutlet weak var filtersTableView: UITableView!
 	let filtersTableSectionsHeaders = ["Deals", "Distance", "Sort By", "Categories"]
@@ -23,6 +23,7 @@ class FiltersViewController: UIViewController, UITableViewDataSource, UITableVie
 	let distanceInMeters: [Int] = [483, 1609, 8047, 32187]
 	var categories: [[String:String]]!
 	var switchStates: [Int:Bool] = [Int:Bool]()
+	var sectionsExpanded = [false, false, false, false]
 	
 	weak var delegate: FiltersViewControllerDelegate?
 	
@@ -91,12 +92,43 @@ class FiltersViewController: UIViewController, UITableViewDataSource, UITableVie
 		return filtersTableSectionsHeaders.count
 	}
 		
-	func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-		return filtersTableSectionsHeaders[section]
-	}
+//	func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+//		return filtersTableSectionsHeaders[section]
+//	}
 	
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return rowsInSection[section]
+	}
+	
+	func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+		return 44
+	}
+	
+	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+		if sectionsExpanded[indexPath.section] {
+			return 44
+		} else {
+			return 0
+		}
+	}
+	
+	func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+		return 2
+	}
+	
+	func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+		let header = ExpandableHeaderView();
+		header.customInit(title: filtersTableSectionsHeaders[section], section: section, delegate: self)
+		return header
+	}
+	
+	func expandSection(expandableHeaderView: ExpandableHeaderView, section: Int) {
+		sectionsExpanded[section] = !sectionsExpanded[section]
+		filtersTableView.beginUpdates()
+		for i in 0..<rowsInSection[section] {
+			filtersTableView.reloadRows(at: [IndexPath(row: i, section: section)], with: .automatic)
+		}
+		filtersTableView.endUpdates()
 	}
 	
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
