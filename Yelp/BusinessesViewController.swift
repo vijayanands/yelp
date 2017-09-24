@@ -7,9 +7,12 @@
 //
 
 import UIKit
+import MapKit
 
 class BusinessesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, FiltersViewControllerDelegate, UISearchBarDelegate {
+	@IBOutlet weak var resultsViewType: UISegmentedControl!
     
+	@IBOutlet weak var mapView: MKMapView!
     var businesses: [Business]!
     @IBOutlet weak var resultsTableView: UITableView!
 	@IBOutlet weak var filtersButton: UIBarButtonItem!
@@ -23,6 +26,9 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
         resultsTableView.dataSource = self
         resultsTableView.estimatedRowHeight = 130
         resultsTableView.rowHeight = UITableViewAutomaticDimension
+		resultsViewType.becomeFirstResponder()
+		resultsViewType.layer.borderWidth = 2
+		resultsViewType.layer.borderColor = UIColor.gray.cgColor
 		
 		let searchBar = UISearchBar()
 		searchBar.sizeToFit()
@@ -40,16 +46,45 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
                 self.resultsTableView.reloadData()
             
 				if let businesses = businesses {
+					// Location has been defaulted to San Francisco
+					let centerLocation = CLLocation(latitude: 37.785771, longitude: -122.406165)
+					self.goToLocation(location: centerLocation)
 					for business in businesses {
 						print(business.name!)
 						print(business.address!)
+						self.addAnnotationAtAddress(address: business.address!, title: business.name!)
 					}
 				}
             }
         )
+		resultsTableView.isHidden = false
+		mapView.isHidden = true
     }
-    
-    override func viewDidAppear(_ animated: Bool) {
+	
+	// add an annotation with an address: String
+	func addAnnotationAtAddress(address: String, title: String) {
+		let geocoder = CLGeocoder()
+		geocoder.geocodeAddressString(address) { (placemarks, error) in
+			if let placemarks = placemarks {
+				if placemarks.count != 0 {
+					let coordinate = placemarks.first!.location!
+					let annotation = MKPointAnnotation()
+					annotation.coordinate = coordinate.coordinate
+					annotation.title = title
+					self.mapView.addAnnotation(annotation)
+					self.mapView.selectAnnotation(annotation, animated: true)
+				}
+			}
+		}
+	}
+	
+	func goToLocation(location: CLLocation) {
+		let span = MKCoordinateSpanMake(0.01, 0.01)
+		let region = MKCoordinateRegionMake(location.coordinate, span)
+		mapView.setRegion(region, animated: false)
+	}
+	
+	override func viewDidAppear(_ animated: Bool) {
         let nav = self.navigationController?.navigationBar
         nav?.barStyle = UIBarStyle.black
         nav?.tintColor = UIColor.yellow
@@ -132,6 +167,20 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
 		searchActive = false;
 	}
 
+	@IBAction func resultLayoutChanged(_ sender: UISegmentedControl) {
+		switch sender.selectedSegmentIndex
+		{
+		case 0:
+			self.resultsTableView.isHidden = false
+			self.mapView.isHidden = true
+		case 1:
+			self.resultsTableView.isHidden = true
+			self.mapView.isHidden = false
+		default:
+			break;
+		}
+	}
+	
 	// MARK: - Navigation
 	
 	// In a storyboard-based application, you will often want to do a little preparation before navigation
