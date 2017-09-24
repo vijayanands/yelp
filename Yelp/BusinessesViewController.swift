@@ -128,6 +128,10 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
 		searchYelpAndLoadResults(term: searchTerm, sort: yelpSortMode, categories: categories, deals: deals, radius_filter: radius_filter)
 	}
 	
+	func setDetails(for detailsViewController: DetailsViewController) {
+		
+	}
+	
 	func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
 		searchActive = true;
 	}
@@ -180,15 +184,30 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
 		searchActive = false;
 	}
 	
+	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		tableView.deselectRow(at: indexPath, animated: true)
+	}
+	
 	// MARK: - Navigation
 	
 	// In a storyboard-based application, you will often want to do a little preparation before navigation
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		// Get the new view controller using segue.destinationViewController.
 		let navigationController = segue.destination as! UINavigationController
-		let filtersViewController = navigationController.topViewController as! FiltersViewController
-		// Pass the selected object to the new view controller.
-		filtersViewController.delegate = self
+		let viewController = navigationController.topViewController
+		let className = NSStringFromClass((viewController?.classForCoder)!)
+		if (className == "Yelp.FiltersViewController") {
+			let filtersViewController = navigationController.topViewController as! FiltersViewController
+			// Pass the selected object to the new view controller.
+			filtersViewController.delegate = self
+		} else {
+			let detailsViewController = navigationController.topViewController as! DetailsViewController
+			let cell = sender as! UITableViewCell
+			let indexPath = resultsTableView.indexPath(for: cell)
+			
+			// Pass the selected object to the new view controller.
+			detailsViewController.business = self.businesses[(indexPath?.row)!]
+		}
 	}
 	
 }
