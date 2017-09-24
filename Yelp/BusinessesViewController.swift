@@ -40,23 +40,12 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
 		// you just need to set the titleView to be the search bar
 		self.navigationItem.titleView = searchBar
 		
-        Business.searchWithTerm(term: "Thai", completion: { (businesses: [Business]?, error: Error?) -> Void in
-            
-                self.businesses = businesses
-                self.resultsTableView.reloadData()
-            
-				if let businesses = businesses {
-					// Location has been defaulted to San Francisco
-					let centerLocation = CLLocation(latitude: 37.785771, longitude: -122.406165)
-					self.goToLocation(location: centerLocation)
-					for business in businesses {
-						print(business.name!)
-						print(business.address!)
-						self.addAnnotationAtAddress(address: business.address!, title: business.name!)
-					}
-				}
-            }
-        )
+		// Location has been defaulted to San Francisco
+		let centerLocation = CLLocation(latitude: 37.785771, longitude: -122.406165)
+		self.goToLocation(location: centerLocation)
+
+		searchYelpAndLoadResults(term: "Thai", sort: nil, categories: nil, deals: nil, radius_filter: nil)
+
 		resultsTableView.isHidden = false
 		mapView.isHidden = true
     }
@@ -87,7 +76,7 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
 	override func viewDidAppear(_ animated: Bool) {
         let nav = self.navigationController?.navigationBar
         nav?.barStyle = UIBarStyle.black
-        nav?.tintColor = UIColor.yellow
+        nav?.tintColor = UIColor.white
     }
     
     override func didReceiveMemoryWarning() {
@@ -136,10 +125,7 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
 			yelpSortMode = YelpSortMode(rawValue: sort!)
 		}
 		
-		Business.searchWithTerm(term: searchTerm, sort: yelpSortMode, categories: categories, deals: deals, radius_filter: radius_filter) { (businesses: [Business]?, error: Error?) in
-			self.businesses = businesses
-			self.resultsTableView.reloadData()
-		}
+		searchYelpAndLoadResults(term: searchTerm, sort: yelpSortMode, categories: categories, deals: deals, radius_filter: radius_filter)
 	}
 	
 	func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
@@ -159,12 +145,7 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
 	}
 	
 	func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-		Business.searchWithTerm(term: searchText, sort: nil, categories: nil, deals: nil, radius_filter: nil) { (businesses: [Business]?, error: Error?) in
-			self.businesses = businesses
-			self.resultsTableView.reloadData()
-		}
-		searchTerm = searchText
-		searchActive = false;
+		searchYelpAndLoadResults(term: searchText, sort: nil, categories: nil, deals: nil, radius_filter: nil)
 	}
 
 	@IBAction func resultLayoutChanged(_ sender: UISegmentedControl) {
@@ -179,6 +160,24 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
 		default:
 			break;
 		}
+	}
+	
+	func searchYelpAndLoadResults(term: String, sort: YelpSortMode?, categories: [String]?, deals: Bool?, radius_filter: Int?) {
+		Business.searchWithTerm(term: searchTerm, sort: sort, categories: categories, deals: deals, radius_filter: radius_filter) { (businesses: [Business]?, error: Error?) in
+			self.businesses = businesses
+			self.resultsTableView.reloadData()
+			
+			if let businesses = businesses {
+				let allAnnotations = self.mapView.annotations
+				self.mapView.removeAnnotations(allAnnotations)
+				for business in businesses {
+					print(business.name!)
+					print(business.address!)
+					self.addAnnotationAtAddress(address: business.address!, title: business.name!)
+				}
+			}
+		}
+		searchActive = false;
 	}
 	
 	// MARK: - Navigation
