@@ -153,15 +153,26 @@ class FiltersViewController: UIViewController, UITableViewDataSource, UITableVie
 		}
 		cell.delegate = self
 		print("Section \(indexPath.section), Row \(indexPath.row)")
-		
-		cell.pwSwitch.on = switchStates[findRowIndex(forSection: indexPath.section, forRow: indexPath.row)] ?? false
+		let rowIndex = findRowIndex(forSection: indexPath.section, forRow: indexPath.row)
+		if (switchStates[rowIndex] != nil) {
+			print("switch state for row index \(rowIndex) is \(String(describing: switchStates[rowIndex]))")
+			cell.pwSwitch.on = switchStates[rowIndex]!
+			if (switchStates[rowIndex] == true) {
+				print("cell at section \(indexPath.section), row \(indexPath.row), rowIndex \(rowIndex) is set to on")
+			}
+		} else {
+			cell.pwSwitch.on = false
+		}
+//		cell.pwSwitch.on = switchStates[findRowIndex(forSection: indexPath.section, forRow: indexPath.row)] ?? false
 		return cell
 	}
 	
 	func filterCell(filterCell: FilterCell, didChangeValue value: Bool) {
 		let indexPath = filtersTableView.indexPath(for: filterCell)!
 		print("section \(indexPath.section), row \(indexPath.row)")
-		switchStates[findRowIndex(forSection: indexPath.section, forRow: indexPath.row)] = value
+		let rowIndex = findRowIndex(forSection: indexPath.section, forRow: indexPath.row)
+		print("SwitchState for Row Index \(rowIndex) being set to \(value)")
+		switchStates[rowIndex] = value
 	}
 	
 	

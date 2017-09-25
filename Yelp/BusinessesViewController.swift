@@ -38,6 +38,9 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
 		searchBar.sizeToFit()
 		searchBar.delegate = self
 		
+//		let button1 = UIBarButtonItem(image: UIImage(named: "filter.pnd"), style: .plain, target: self, action: #selector(getter: UIDynamicBehavior.action)) // action:#selector(Class.MethodName) for swift 3
+//		self.navigationItem.leftBarButtonItem = button1
+		
 		// the UIViewController comes with a navigationItem property
 		// this will automatically be initialized for you if when the
 		// view controller is added to a navigation controller's stack
@@ -65,14 +68,14 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
 					annotation.coordinate = coordinate.coordinate
 					annotation.title = title
 					self.mapView.addAnnotation(annotation)
-					self.mapView.selectAnnotation(annotation, animated: true)
+					// self.mapView.selectAnnotation(annotation, animated: true)
 				}
 			}
 		}
 	}
 	
 	func goToLocation(location: CLLocation) {
-		let span = MKCoordinateSpanMake(0.01, 0.01)
+		let span = MKCoordinateSpanMake(0.1, 0.1)
 		let region = MKCoordinateRegionMake(location.coordinate, span)
 		mapView.setRegion(region, animated: false)
 	}
@@ -210,7 +213,11 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
 			if tempBusinessList != nil {
 				let allAnnotations = self.mapView.annotations
 				self.mapView.removeAnnotations(allAnnotations)
-				self.businesses = self.businesses + tempBusinessList!
+				if (loadMoreData) {
+					self.businesses = self.businesses + tempBusinessList!
+				} else {
+					self.businesses = tempBusinessList!
+				}
 				for business in self.businesses {
 					print(business.name!)
 					// print(business.address!)
