@@ -207,7 +207,7 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
 		}
 		
 		MBProgressHUD.showAdded(to: self.view, animated: true)
-		Business.searchWithTerm(term: searchTerm, sort: sort, categories: categories, deals: deals, radius_filter: radius_filter, offset: offset, limit: limit) { (tempBusinessList: [Business]?, error: Error?) in
+		Business.searchWithTerm(term: term, sort: sort, categories: categories, deals: deals, radius_filter: radius_filter, offset: offset, limit: limit) { (tempBusinessList: [Business]?, error: Error?) in
 			print("Offset: \(String(describing: offset))")
 			print("Number of Businesses returned: \(String(describing: tempBusinessList?.count))")
 			if tempBusinessList != nil {
