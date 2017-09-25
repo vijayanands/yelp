@@ -8,16 +8,20 @@
 
 import UIKit
 import MapKit
+import MBProgressHUD
 
-class BusinessesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, FiltersViewControllerDelegate, UISearchBarDelegate {
+class BusinessesViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, FiltersViewControllerDelegate, UISearchBarDelegate, UIScrollViewDelegate {
 	@IBOutlet weak var resultsViewType: UISegmentedControl!
     
 	@IBOutlet weak var mapView: MKMapView!
-    var businesses: [Business]!
+    var businesses = [Business]()
     @IBOutlet weak var resultsTableView: UITableView!
 	@IBOutlet weak var filtersButton: UIBarButtonItem!
 	var searchActive: Bool = false
 	var searchTerm = "Restaurants"
+	var isMoreDataLoading = false
+	var currentSearchTerms = YelpSearchParams()
+	var limit = 10
 	
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,7 +48,7 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
 		let centerLocation = CLLocation(latitude: 37.785771, longitude: -122.406165)
 		self.goToLocation(location: centerLocation)
 
-		searchYelpAndLoadResults(term: "Thai", sort: nil, categories: nil, deals: nil, radius_filter: nil)
+		searchYelpAndLoadResults(term: "Thai", sort: nil, categories: nil, deals: nil, radius_filter: nil, offset: 0, loadMoreData: false)
 
 		resultsTableView.isHidden = false
 		mapView.isHidden = true
@@ -85,11 +89,7 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if businesses != nil {
-            return businesses.count
-        } else {
-            return 0
-        }
+		return businesses.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -125,7 +125,7 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
 			yelpSortMode = YelpSortMode(rawValue: sort!)
 		}
 		
-		searchYelpAndLoadResults(term: searchTerm, sort: yelpSortMode, categories: categories, deals: deals, radius_filter: radius_filter)
+		searchYelpAndLoadResults(term: searchTerm, sort: yelpSortMode, categories: categories, deals: deals, radius_filter: radius_filter, offset: 0, loadMoreData: false)
 	}
 	
 	func setDetails(for detailsViewController: DetailsViewController) {
@@ -149,7 +149,7 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
 	}
 	
 	func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-		searchYelpAndLoadResults(term: searchText, sort: nil, categories: nil, deals: nil, radius_filter: nil)
+		searchYelpAndLoadResults(term: searchText, sort: nil, categories: nil, deals: nil, radius_filter: nil, offset: 0, loadMoreData: false)
 	}
 
 	@IBAction func resultLayoutChanged(_ sender: UISegmentedControl) {
@@ -166,26 +166,63 @@ class BusinessesViewController: UIViewController, UITableViewDelegate, UITableVi
 		}
 	}
 	
-	func searchYelpAndLoadResults(term: String, sort: YelpSortMode?, categories: [String]?, deals: Bool?, radius_filter: Int?) {
-		Business.searchWithTerm(term: searchTerm, sort: sort, categories: categories, deals: deals, radius_filter: radius_filter) { (businesses: [Business]?, error: Error?) in
-			self.businesses = businesses
-			self.resultsTableView.reloadData()
+	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		tableView.deselectRow(at: indexPath, animated: true)
+	}
+	
+	func scrollViewDidScroll(_ scrollView: UIScrollView) {
+		// Calculate the position of one screen length before the bottom of the results
+		let scrollViewContentHeight = resultsTableView.contentSize.height
+		let tableViewBounds = resultsTableView.bounds.size.height
+		let scrollOffsetThreshold = scrollViewContentHeight - tableViewBounds
+		
+		// When the user has scrolled past the threshold, start requesting
+		let currentOffset = scrollView.contentOffset.y
+		if(currentOffset > scrollOffsetThreshold && resultsTableView.isDragging) {
+			isMoreDataLoading = true
 			
-			if let businesses = businesses {
+			// Code to load more results
+			loadMoreData()
+		}
+	}
+	
+	func loadMoreData() {
+		searchYelpAndLoadResults(term: currentSearchTerms.term!,
+		                         sort: currentSearchTerms.sort,
+		                         categories: currentSearchTerms.categories,
+		                         deals: currentSearchTerms.deals,
+		                         radius_filter: currentSearchTerms.radius_filter,
+		                         offset: currentSearchTerms.offset!,
+		                         loadMoreData: true)
+		// Update flag
+		isMoreDataLoading = false
+	}
+	
+	func searchYelpAndLoadResults(term: String, sort: YelpSortMode?, categories: [String]?, deals: Bool?, radius_filter: Int?, offset: Int?, loadMoreData: Bool) {
+		if (!loadMoreData) {
+			currentSearchTerms.customInit(term: term, sort: sort, categories: categories, deals: deals, radius_filter: radius_filter, offset: offset, limit: limit)
+		}
+		
+		MBProgressHUD.showAdded(to: self.view, animated: true)
+		Business.searchWithTerm(term: searchTerm, sort: sort, categories: categories, deals: deals, radius_filter: radius_filter, offset: offset, limit: limit) { (tempBusinessList: [Business]?, error: Error?) in
+			print("Offset: \(String(describing: offset))")
+			print("Number of Businesses returned: \(String(describing: tempBusinessList?.count))")
+			if tempBusinessList != nil {
 				let allAnnotations = self.mapView.annotations
 				self.mapView.removeAnnotations(allAnnotations)
-				for business in businesses {
+				self.businesses = self.businesses + tempBusinessList!
+				for business in self.businesses {
 					print(business.name!)
-					print(business.address!)
+					// print(business.address!)
 					self.addAnnotationAtAddress(address: business.address!, title: business.name!)
 				}
 			}
+			self.currentSearchTerms.offset = offset! + self.limit
+			print("New Offset \(String(describing: self.currentSearchTerms.offset))")
+			self.resultsTableView.reloadData()
 		}
+		MBProgressHUD.hide(for: self.view, animated: true)
 		searchActive = false;
-	}
-	
-	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		tableView.deselectRow(at: indexPath, animated: true)
 	}
 	
 	// MARK: - Navigation

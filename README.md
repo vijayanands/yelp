@@ -2,7 +2,7 @@
 
 **Yelp** is a Yelp search app using the [Yelp API](http://www.yelp.com/developers/documentation/v2/search_api).
 
-Time spent: **20** hours spent in total
+Time spent: **24** hours spent in total
 
 ### Basic Yelp client
 
@@ -51,7 +51,7 @@ The following **required** functionality is completed:
 The following **optional** features are implemented:
 
 - [x] Search results page
-   - [ ] Infinite scroll for restaurant results.
+   - [x] Infinite scroll for restaurant results.
    - [x] Implement map view of restaurant results.
 - [ ] Filter page
    - [x] Implement a custom switch instead of the default UISwitch.
@@ -61,12 +61,14 @@ The following **optional** features are implemented:
 
 The following **additional** features are implemented:
 
-- [ ] List anything else that you can get done to improve the app functionality!
+- [x] List anything else that you can get done to improve the app functionality!
+   - [x] Added Progress Indicator for network loading
+
 
 Please list two areas of the assignment you'd like to **discuss further with your peers** during the next class (examples include better ways to implement something, how to extend your app in certain ways, etc):
 
 1. How can we implement a custom UI Switch Image without the pod
-2.
+2. See All implementation 
 
 ## Video Walkthrough
 

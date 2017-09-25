@@ -18,6 +18,7 @@
 		31D95BCBCA38716181E686D3 /* Pods_Yelp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C79C0AC126EDAA235847CEA2 /* Pods_Yelp.framework */; };
 		47848697133B87663A122E3D /* Pods_YelpTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A1000F3975EB43318C1D4FA /* Pods_YelpTests.framework */; };
 		AF04FE0B1F784DD600A5BC79 /* DetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF04FE0A1F784DD600A5BC79 /* DetailsViewController.swift */; };
+		AF04FE0D1F787F1400A5BC79 /* YelpSearchParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF04FE0C1F787F1400A5BC79 /* YelpSearchParams.swift */; };
 		AF2FBDD11F76C46A006BF10C /* FiltersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF2FBDD01F76C46A006BF10C /* FiltersViewController.swift */; };
 		AF4CC4121F75CFD1006E8F4A /* FilterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF4CC4111F75CFD1006E8F4A /* FilterCell.swift */; };
 		AFA4A8131F733453008532CE /* BusinessCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA4A8121F733453008532CE /* BusinessCell.swift */; };
@@ -53,6 +54,7 @@
 		9B128C050DE78660DE2A8E75 /* Pods-YelpTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YelpTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-YelpTests/Pods-YelpTests.release.xcconfig"; sourceTree = "<group>"; };
 		AA3C5CF4FD317D72ABE2AAC4 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AF04FE0A1F784DD600A5BC79 /* DetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailsViewController.swift; sourceTree = "<group>"; };
+		AF04FE0C1F787F1400A5BC79 /* YelpSearchParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YelpSearchParams.swift; sourceTree = "<group>"; };
 		AF2FBDD01F76C46A006BF10C /* FiltersViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FiltersViewController.swift; sourceTree = "<group>"; };
 		AF4CC4111F75CFD1006E8F4A /* FilterCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterCell.swift; sourceTree = "<group>"; };
 		AFA4A8121F733453008532CE /* BusinessCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BusinessCell.swift; sourceTree = "<group>"; };
@@ -154,6 +156,7 @@
 			isa = PBXGroup;
 			children = (
 				22AAAA981AEA0A9700A544AF /* Business.swift */,
+				AF04FE0C1F787F1400A5BC79 /* YelpSearchParams.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -362,12 +365,14 @@
 				"${SRCROOT}/Pods/Target Support Files/Pods-Yelp/Pods-Yelp-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/AFNetworking/AFNetworking.framework",
 				"${BUILT_PRODUCTS_DIR}/BDBOAuth1Manager/BDBOAuth1Manager.framework",
+				"${BUILT_PRODUCTS_DIR}/MBProgressHUD/MBProgressHUD.framework",
 				"${BUILT_PRODUCTS_DIR}/PWSwitch/PWSwitch.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AFNetworking.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BDBOAuth1Manager.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MBProgressHUD.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PWSwitch.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -420,6 +425,7 @@
 				AF04FE0B1F784DD600A5BC79 /* DetailsViewController.swift in Sources */,
 				22AAAA9C1AEA1EC300A544AF /* BusinessesViewController.swift in Sources */,
 				22AAAA991AEA0A9700A544AF /* Business.swift in Sources */,
+				AF04FE0D1F787F1400A5BC79 /* YelpSearchParams.swift in Sources */,
 				222D8A7D19CCFAE000D2DB53 /* YelpClient.swift in Sources */,
 				AFB1B0C11F78113300DFA6EB /* ExpandableHeaderView.swift in Sources */,
 				AF2FBDD11F76C46A006BF10C /* FiltersViewController.swift in Sources */,
