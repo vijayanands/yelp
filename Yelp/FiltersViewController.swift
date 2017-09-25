@@ -138,32 +138,22 @@ class FiltersViewController: UIViewController, UITableViewDataSource, UITableVie
 		switch sectionId {
 		case 0:
 			cell.itemLabel.text = "Offering a Deal"
-			cell.pwSwitch.on = false
+			cell.uikitSwitch.isOn = false
 		case 1:
 			cell.itemLabel.text = distances[indexPath.row]
-			cell.pwSwitch.on = false
+			cell.uikitSwitch.isOn = false
 		case 2:
 			cell.itemLabel.text = sortBy[indexPath.row]
-			cell.pwSwitch.on = false
+			cell.uikitSwitch.isOn = false
 		case 3:
 			cell.itemLabel.text = categories[indexPath.row]["name"]
-			cell.pwSwitch.on = false
+			cell.uikitSwitch.isOn = false
 		default:
 			print("invalid section")
 		}
 		cell.delegate = self
 		print("Section \(indexPath.section), Row \(indexPath.row)")
-		let rowIndex = findRowIndex(forSection: indexPath.section, forRow: indexPath.row)
-		if (switchStates[rowIndex] != nil) {
-			print("switch state for row index \(rowIndex) is \(String(describing: switchStates[rowIndex]))")
-			cell.pwSwitch.on = switchStates[rowIndex]!
-			if (switchStates[rowIndex] == true) {
-				print("cell at section \(indexPath.section), row \(indexPath.row), rowIndex \(rowIndex) is set to on")
-			}
-		} else {
-			cell.pwSwitch.on = false
-		}
-//		cell.pwSwitch.on = switchStates[findRowIndex(forSection: indexPath.section, forRow: indexPath.row)] ?? false
+		cell.uikitSwitch.isOn = switchStates[findRowIndex(forSection: indexPath.section, forRow: indexPath.row)] ?? false
 		return cell
 	}
 	
